@@ -1,0 +1,2 @@
+[webservers]
+ubuntu-vm ansible_host=158.160.169.251 ansible_connection=ssh

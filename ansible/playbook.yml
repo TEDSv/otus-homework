@@ -1,0 +1,30 @@
+- name: Install nginx
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Ping machine
+      ping:
+
+    - name: Update all packages to the latest version
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install nginx and related packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: true
+      loop:
+        - nginx
+
+    - name: Enable and start Docker services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop:
+        - nginx
+
+        
