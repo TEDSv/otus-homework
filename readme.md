@@ -8,6 +8,7 @@
 
      terraform destroy -auto-approve
 
+Команды выполнят установку и настройку виртуальной машины на Ubuntu и установку nginx на виртуалку.
 
 ## Структура файлов:
  - terraform:
@@ -32,6 +33,8 @@
 	 - Создает файл состояния Terraform.
 2. `terraform validate`:
 	 - Проверяет конфигурацию файлов Terraform
+![WindowsTerminal_Q3cDvr9WLJ](https://github.com/TEDSv/otus-homework/assets/35523575/d4ae4482-9b87-41ce-ab8e-f570801fe929)
+
 3. `terraform plan`:
 	 - Создает план действий Terraform.
 	 - Показывает, какие изменения будут внесены в инфраструктуру.
@@ -40,7 +43,13 @@
 	 - Применяет план действий Terraform.
 	 - Создает или обновляет ресурсы инфраструктуры.
 	 - Выполняет изменения, описанные в плане.
+![WindowsTerminal_T3WJkVqzbk](https://github.com/TEDSv/otus-homework/assets/35523575/ee25b431-1345-419e-bfe4-d951934e7064)
+
 5. `terraform destroy`:
 	 - Уничтожает ресурсы инфраструктуры Terraform.
 	 - Удаляет ресурсы, созданные с помощью Terraform.
 	 - Может использоваться для полного демонтажа инфраструктуры.
+
+![WindowsTerminal_iLNJYbAshA](https://github.com/TEDSv/otus-homework/assets/35523575/302e178b-482e-45ff-ab58-356536a5210e)
+
+![msedge_LzhCsC4Mgv](https://github.com/TEDSv/otus-homework/assets/35523575/d78757ce-0965-4efa-8b21-7191656a4234)
