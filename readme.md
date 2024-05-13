@@ -4,6 +4,9 @@
     terraform init
     terraform apply
     ansible-playbook -u ted -i hosts playbook.yml
+
+![msedge_LzhCsC4Mgv](https://github.com/TEDSv/otus-homework/assets/35523575/d78757ce-0965-4efa-8b21-7191656a4234)
+
 Как всё удалить:
 
      terraform destroy -auto-approve
@@ -50,6 +53,11 @@
 	 - Удаляет ресурсы, созданные с помощью Terraform.
 	 - Может использоваться для полного демонтажа инфраструктуры.
 
+## Команды для запуска Ansible
+`ansible-inventory --list -y -i hosts` - выводит список инвентори
+ `ansible -m ping -i hosts` - запускает пинг по списку hosts
+ `ansible-playbook -u ted -i hosts playbook.yml` запускает выполнение плейбука
 ![WindowsTerminal_iLNJYbAshA](https://github.com/TEDSv/otus-homework/assets/35523575/302e178b-482e-45ff-ab58-356536a5210e)
 
-![msedge_LzhCsC4Mgv](https://github.com/TEDSv/otus-homework/assets/35523575/d78757ce-0965-4efa-8b21-7191656a4234)
+
+
