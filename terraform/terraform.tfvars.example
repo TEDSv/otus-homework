@@ -1,0 +1,9 @@
+cloud_id = ""
+folder_id = ""
+ted_key = ""
+vms = [
+  "nginx",
+  "web-01",
+  "web-02",
+  "postgres-01",
+]

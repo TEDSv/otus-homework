@@ -43,3 +43,4 @@ terraform.rc
 **/notes/*
 
 *.hcl
+draft.tf

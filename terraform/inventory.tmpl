@@ -1,0 +1,27 @@
+all:
+  children:
+    webservers:
+      hosts:
+%{ for content_key, content_value in content }
+%{~ if length(regexall("web", content_key)) > 0 ~}
+        ${content_key}:
+          ansible_host: ${content_value}
+%{ endif ~}
+%{~ endfor ~}
+    proxy_servers:
+      hosts:
+%{ for content_key, content_value in content }
+%{~ if length(regexall("nginx", content_key)) > 0 ~}
+        ${content_key}:
+          ansible_host: ${content_value}
+%{ endif ~}
+%{~ endfor ~}
+    bd_servers:
+      postgres_bd:
+        hosts:
+%{ for content_key, content_value in content }
+%{~ if length(regexall("postgres", content_key)) > 0 ~}
+          ${content_key}:
+            ansible_host: ${content_value}
+%{ endif ~}
+%{~ endfor ~}

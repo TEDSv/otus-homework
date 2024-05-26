@@ -1,0 +1,55 @@
+- name: Setup Postgres
+  hosts: postgres_bd
+  become: yes
+  
+  tasks:
+
+  - name: Add pgdg repo to sources.list.d
+    lineinfile:
+      path: /etc/apt/sources.list.d/pgdg.list
+      line: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+      create: true
+
+  - name: Download PostgreSQL key and add it to system keyring
+    apt_key:
+      url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+      state: present
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: Install packages
+    apt:
+      name:
+        - postgresql
+        - acl
+        - python3-psycopg2
+      state: present
+
+  - name: Start and enable the service
+    ansible.builtin.systemd:
+      name: postgresql
+      state: started
+      enabled: true
+
+  - name: Configure listen_addresses in Postgres settings
+    lineinfile:
+      path: /etc/postgresql/16/main/postgresql.conf
+      regexp: '^#listen_addresses'
+      line: "listen_addresses '*'"
+    notify:
+      - restart postgres
+
+  - name: Reset postgres password
+    postgresql_user: 
+      db: postgres
+      name: postgres
+      password: "{{ postgres_password }}"
+      expires: infinity
+    become_user: postgres
+
+  handlers:
+    - name: restart postgres
+      service: name=postgresql state=restarted

@@ -22,5 +22,10 @@ variable "vm_platform_id" {
 }
 
 variable "ted_key" {
-  type = string
+  description = "SSH public key"
+  type        = string
+}
+
+variable "vms" {
+  type    = list(string)
 }

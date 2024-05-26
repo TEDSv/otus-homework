@@ -1,6 +1,10 @@
 - name: Install nginx
-  hosts: webservers
+  hosts: proxy_servers
   become: yes
+
+  vars:
+    packages: 
+      - "nginx"
 
   tasks:
     - name: Ping machine
@@ -17,14 +21,12 @@
         state: latest
         update_cache: true
       loop:
-        - nginx
+        - "{{ packages }}"
 
-    - name: Enable and start Docker services
+    - name: Enable and start nginx services
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: true
         state: started
       loop:
-        - nginx
-
-        
+        - "{{ packages }}"

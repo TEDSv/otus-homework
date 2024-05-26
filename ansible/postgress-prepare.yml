@@ -1,0 +1,51 @@
+- name: Prepare Postgres
+  hosts: postgres_bd
+  become: yes
+
+  vars:
+    db_name: app
+    db_user: app
+    db_password: ""
+    postgres_password: ""
+  
+  tasks:
+
+  - name: Create app database
+    postgresql_db:
+      state: present
+      name: "{{ db_name }}"
+    become: yes
+    become_user: postgres
+
+  - name: Create user
+    community.postgresql.postgresql_user:
+      state: present
+      name: "{{ db_user }}"
+      password: "{{ db_user_password }}"
+      expires: infinity
+      role_attr_flags: CREATEDB,CREATEROLE,SUPERUSER
+    become_user: postgres
+
+  - name: Grant access to db
+    community.postgresql.postgresql_privs:
+      type: database
+      database: "{{ db_name }}"
+      roles: "{{ db_user }}"
+      grant_option: no
+      privs: all
+    become_user: postgres
+
+  - name: Allow connection for the user
+    postgresql_pg_hba:
+      dest: /etc/postgresql/16/main/pg_hba.conf
+      contype: host
+      users: "{{ db_user }}"
+      databases: "{{ db_name }}"
+      method: scram-sha-256
+      create: true
+    become_user: postgres
+    notify: restart postgres
+
+  handlers:
+    - name: restart postgres
+      service: name=postgresql state=restarted
