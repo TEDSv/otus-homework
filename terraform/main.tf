@@ -20,7 +20,7 @@ resource "yandex_vpc_subnet" "local-subnet-1" {
 
 
 #########################
-### Security groups
+### Network security groups
 #########################
 resource yandex_vpc_security_group sg_allow_outgoing {
 
@@ -115,8 +115,12 @@ resource "yandex_compute_instance" "ubuntu_vm" {
     security_group_ids = [
       yandex_vpc_security_group.sg_allow_outgoing.id,
       yandex_vpc_security_group.sg_allow_ssh.id,
-      # each.key  != "postgres-01" ? yandex_vpc_security_group.sg_allow_http.id : "",
-      each.key  == "postgres-01" ? yandex_vpc_security_group.sg_postgre.id : yandex_vpc_security_group.sg_allow_http.id,
+      # each.key  != "postgres-01" ? 
+      #   yandex_vpc_security_group.sg_allow_http.id :
+      #   "",
+      each.key  == "postgres-01" ? 
+          yandex_vpc_security_group.sg_postgre.id : 
+          yandex_vpc_security_group.sg_allow_http.id,
     ]
   }
 

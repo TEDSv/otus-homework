@@ -1,5 +1,5 @@
 - name: Install nginx
-  hosts: proxy_servers
+  hosts: webservers
   become: yes
 
   vars:
@@ -7,9 +7,6 @@
       - "nginx"
 
   tasks:
-    - name: Ping machine
-      ping:
-
     - name: Update all packages to the latest version
       apt:
         update_cache: yes

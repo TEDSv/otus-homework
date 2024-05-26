@@ -1,19 +1,20 @@
 all:
   children:
     webservers:
-      hosts:
+      backend: 
+        hosts:
 %{ for content_key, content_value in content }
 %{~ if length(regexall("web", content_key)) > 0 ~}
-        ${content_key}:
-          ansible_host: ${content_value}
+          ${content_key}:
+            ansible_host: ${content_value}
 %{ endif ~}
 %{~ endfor ~}
-    proxy_servers:
-      hosts:
+      proxy_servers:
+        hosts:
 %{ for content_key, content_value in content }
 %{~ if length(regexall("nginx", content_key)) > 0 ~}
-        ${content_key}:
-          ansible_host: ${content_value}
+          ${content_key}:
+            ansible_host: ${content_value}
 %{ endif ~}
 %{~ endfor ~}
     bd_servers:

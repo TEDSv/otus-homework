@@ -1,5 +1,5 @@
 - name: Prepare Postgres
-  hosts: postgres_bd
+  hosts: postgres-01
   become: yes
 
   vars:
