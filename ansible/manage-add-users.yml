@@ -1,0 +1,63 @@
+- name: Add users to linux
+  hosts: all_linux
+  become: yes
+
+  vars:
+    users:
+      - { name: 'ted', key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}" }
+
+  tasks:
+
+  - name: Create user
+    user:
+      name: "{{ item }}"
+      state: present
+      shell: /bin/bash
+      createhome: yes
+    become: yes
+    with_items: "{{ users }}"
+
+  - name: Make sure we have a 'wheel' group
+    group:
+      name: wheel
+      state: present
+
+  - name: Allow 'wheel' group to have passwordless sudo (sudoers)
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      validate: visudo -cf %s
+
+  - name: Add users to wheel group with sudoers right
+    user:
+      name: "{{ item }}"
+      groups: wheel
+      append: yes
+    with_items: "{{ users }}"
+
+  - name: Add SSH key to users authorized_keys
+    authorized_key:
+      user: "{{ item.name }}"
+      state: present
+      key: "{{ item.key }}"
+      exclusive: no  # Устанавливаем в 'no', чтобы не удалять другие ключи
+      manage_dir: yes  # Управление каталогом .ssh, если он не существует
+    loop: "{{ users }}"
+
+  - name: Allow key authentication
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^#?PubkeyAuthentication .*'
+      line: 'PubkeyAuthentication yes'
+      backrefs: yes
+      backup: yes
+    register: pubkey_auth
+
+  - name: Restart SSH server
+    ansible.builtin.systemd:
+      name: ssh
+      state: restarted
+      daemon_reload: yes
+    when: pubkey_auth.changed

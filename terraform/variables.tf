@@ -29,3 +29,15 @@ variable "ted_key" {
 variable "vms" {
   type    = list(string)
 }
+
+variable "terraform_public_key" {
+  default = "~/.ssh/terraform.pub"
+}
+
+variable "terraform_private_key" {
+  default = "~/.ssh/terraform.pem"
+}
+
+variable "terraform_user" {
+  default = "terraform"
+}

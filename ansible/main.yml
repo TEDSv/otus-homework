@@ -1,0 +1,15 @@
+- name: Add users to linux
+  hosts: all
+  become: yes
+
+- name: Add users
+  ansible.builtin.import_playbook: manage-add-users.yml
+
+- name: Install nginx
+  ansible.builtin.import_playbook: nginx-install.yml
+
+- name: Install Postgres
+  ansible.builtin.import_playbook: postgress-install.yml
+
+- name: Prepare Postgres
+  ansible.builtin.import_playbook: postgress-prepare.yml

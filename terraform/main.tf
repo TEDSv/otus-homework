@@ -1,6 +1,7 @@
 #########################
 ### Networks
 #########################
+
 # Создание сети
 resource "yandex_vpc_network" "local-network" {
   name = "local-network"
@@ -22,6 +23,7 @@ resource "yandex_vpc_subnet" "local-subnet-1" {
 #########################
 ### Network security groups
 #########################
+
 resource yandex_vpc_security_group sg_allow_outgoing {
 
   name        = "Security group for allow outgoing traffic"
@@ -84,6 +86,7 @@ resource yandex_vpc_security_group sg_postgre {
 #########################
 ### Virtual machines
 #########################
+
 # Получение image_id
 data "yandex_compute_image" "ubuntu" {
   family = var.ubuntu_family
@@ -133,7 +136,8 @@ resource "yandex_compute_instance" "ubuntu_vm" {
 
   # закидываем юзера и ssh ключ
   metadata = {
-    ssh-keys = "ted:${var.ted_key}"
+    ssh-keys = "terraform:${file(var.terraform_public_key)}"
+    # ключ не подходит -_-
   }
 
   # какие изменения игнорировать: imdage_id и размер диска
@@ -148,4 +152,28 @@ resource "yandex_compute_instance" "ubuntu_vm" {
   depends_on = [
     yandex_vpc_subnet.local-subnet-1
   ]
+
+  # Ansible
+  # provisioner "remote-exec" {
+  #   # Костыль для ожидания когда поднимется вмка
+  #   inline = ["echo checking for ssh in vm"]
+
+  #   connection {
+  #     host        = self.network_interface.0.ip_address
+  #     type        = "ssh"
+  #     user        = "terraform"
+  #     private_key = file(var.terraform_private_key)
+  #   }
+  # }
+
+  # provisioner "local-exec" {
+  #   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u terraform -i '../ansible/inventory.yaml' --private-key ${var.terraform_private_key} -e 'pub_key=${var.terraform_public_key}' ../ansible/main.yml"
+  # }
+  
+
 }
+
+#########################
+### Ansible
+#########################
+
